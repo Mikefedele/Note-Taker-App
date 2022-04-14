@@ -2,89 +2,95 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const readFromFile = util.promisify(fs.readFile);
+const Router = require('express').Router();
+const { title, text } = note;
 
-// const index = require('./index.js/index')
 const PORT = 3001;
 const app = express();
-const db = require('./db/db.json')
-const api = require('./routes/index.js');
+const db = require('./db/db.json');
+
 
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-//homepage
-app.get('/', (req, res) =>
+
+
+
+// route to homepage
+Router.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
-//notes
-app.get('/notes', (req, res) =>
+//route to notes
+Router.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
-
 // GET request for notes
 app.get('/api/notes', (req, res) => {
-  // Send a message to the client
-  res.status(200).json(`${req.method} request to write notes received`);
-
-  // Log our request to the terminal
-  console.info(`${req.method} note update received`);
+  console.info(`${req.method} request for note save`);
+  readFromFile('./db/.json').then((data) => res.json(JSON.parse(data)));
 });
 
 // POST request to add a review
-app.post('/notes', (req, res) => {
-  // Log that a POST request was received
-  console.info(`${req.method} request received to add a review`);
+// app.post('/notes', (req, res) => {
+//   // Log that a POST request was received
+//   console.info(`${req.method} request received to add a review`);
 
   // Destructuring assignment for the items in req.body
-  const { title, text } = req;
+      // Convert string into JSON object
+      // Add a new review
+    
+  // *  Function to write data to the JSON file given a destination and some content
+//  *  @param {string} destination The file you want to write to.
+//  *  @param {object} content The content you want to write to the file.
+//  *  @returns {void} Nothing
+//  */
+
+  const writeToFile = (destination, content) =>
+  fs.writeFile(destination, JSON.stringify(content, null, 4), (err) =>
+    err ? console.error(err) : console.info(`\nData written to ${destination}`)
+  );
+/**
+ * 
+//  *  Function to read data from a given a file and append some content
+//  *  @param {object} content The content you want to append to the file.
+//  *  @param {string} file The path to the file you want to save to.
+//  *  @returns {void} Nothing
+//  */
+
+
 
   // If all the required properties are present
-  if (title && text) {
-    // Variable for the object we will save
-    const newNote = {
-      tile,
-      text,
-     
-    };
+  // if (title && text) {
+    // readFromFile()
+  //   noteListItems.push(note);
+  // then 
+// }
 
     //jsonNotes noteListItems
     // Obtain existing notes, parse to make objects
-    readFromFile('./db/db.json', 'utf8', (err, noteListItems) => {
-      if (err) {
-        console.error(err);
-      } else {
-        // Convert string into JSON object
-        const parsedNotes = JSON.parse(noteListItems);
-
-        // Add a new review
-        noteListItems.push(note);
-
+    
+ 
         // Write the note list out 
-        fs.writeFile(
-          './db/db.json',
-          JSON.stringify(parsedNotes, null, 4),
-          (writeErr) =>
-            writeErr
-              ? console.error(writeErr)
-              : console.info('Successfully updated your notes!')
-        );
-      }
-    });
+        
+      };
+    
+
+   
+  //   const writeToFile = (db, note) =>
+  // fs.writeFile(db, JSON.stringify(note, null, 4), (err) =>
+  //   err ? console.error(err) : console.info(`\nData written to ${db}`)
+  // );
+
 
     const response = {
       status: 'success',
       body: note,
     };
 
-    console.log(response);
-    res.status(201).json(response);
-  } else {
-    res.status(500).json('Error in retrieving your notes');
-  }
-});
+   
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} 🚀`)
