@@ -1,14 +1,14 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const readFromFile = util.promisify(fs.readFile);
-const Router = require('express').Router();
-const { title, text } = note;
-
-const PORT = 3001;
+// const Router = require('express').Router();
+const PORT = process.env.port || 3001;
 const app = express();
 const db = require('./db/db.json');
 
+const uuid = () => Math.floor((1 + Math.random()) * 0x10000)
+.toString(16)
+.substring(1);
 
 
 app.use(express.json());
@@ -19,12 +19,12 @@ app.use(express.static('public'));
 
 
 // route to homepage
-Router.get('/', (req, res) =>
+app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
 //route to notes
-Router.get('/notes', (req, res) =>
+app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 // GET request for notes
@@ -33,25 +33,86 @@ app.get('/api/notes', (req, res) => {
   readFromFile('./db/.json').then((data) => res.json(JSON.parse(data)));
 });
 
-// POST request to add a review
-// app.post('/notes', (req, res) => {
-//   // Log that a POST request was received
-//   console.info(`${req.method} request received to add a review`);
 
+
+// fs.readFile(db, 'utf8', (err, data) => {
+//   if (err) {
+//     console.error(err);
+//   } else {
+//     const parsedData = JSON.parse(data);
+//     parsedData.push(data);
+//         // noteListItems.push();
+
+//     writeToFile(file, parsedData);
+//   }
+// });
+
+
+
+//POST REQ>BODY
+//todo post notes
+app.post('/notes', (req, res) => {
+  //
+  console.info(`${req.method} request received your notes.`);
+  
   // Destructuring assignment for the items in req.body
-      // Convert string into JSON object
-      // Add a new review
+  const {title, text} = req.body
+
+  if (text && title) {
+    const newNote ={
+      text,
+      title,
+      id: uuid(),
+    };
+  }
+
+  fs.readFile(db, 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+    } else {
+
+      //convert string to JSON obj
+      const parsedData = JSON.parse(data);
+
+      //add new note to the saved notes
+      parsedData.push(newNote);
+          noteListItems.push();
+
+      writeToFile(file, parsedData);
+
+      fs.writeFile(db,        
+        JSON.stringify(parsedData, null, 2),
+        (writeErr) =>
+          writeErr 
+          ?console.error(writeErr)
+          :console.info("Note saved sucessfully")
+        ); 
+
+    }
+  });
+
+
+
+
+
     
+      
+});
+
+
+    
+
   // *  Function to write data to the JSON file given a destination and some content
 //  *  @param {string} destination The file you want to write to.
 //  *  @param {object} content The content you want to write to the file.
 //  *  @returns {void} Nothing
 //  */
 
-  const writeToFile = (destination, content) =>
-  fs.writeFile(destination, JSON.stringify(content, null, 4), (err) =>
-    err ? console.error(err) : console.info(`\nData written to ${destination}`)
-  );
+// const writeToFile = (db, parsedNotes) =>
+// fs.writeFile(db, JSON.stringify(note, null, 4), (err) =>
+//   err ? console.error(err) : console.info(`\nData written to ${db}`)
+// );
+
 /**
  * 
 //  *  Function to read data from a given a file and append some content
@@ -61,11 +122,9 @@ app.get('/api/notes', (req, res) => {
 //  */
 
 
-
   // If all the required properties are present
   // if (title && text) {
     // readFromFile()
-  //   noteListItems.push(note);
   // then 
 // }
 
@@ -75,20 +134,16 @@ app.get('/api/notes', (req, res) => {
  
         // Write the note list out 
         
-      };
+      
     
 
    
-  //   const writeToFile = (db, note) =>
-  // fs.writeFile(db, JSON.stringify(note, null, 4), (err) =>
-  //   err ? console.error(err) : console.info(`\nData written to ${db}`)
-  // );
+   
 
-
-    const response = {
-      status: 'success',
-      body: note,
-    };
+    // const response = {
+    //   status: 'success',
+    //   body: note,
+    // };
 
    
 
