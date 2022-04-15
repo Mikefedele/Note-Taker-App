@@ -4,7 +4,7 @@ const fs = require("fs");
 // const Router = require('express').Router();
 const PORT = process.env.port || 3001;
 const app = express();
-// const db = require("./db/db.json");
+const db = require("./db/db.json");
 
 const uuid = () =>
   Math.floor((1 + Math.random()) * 0x10000)
@@ -26,7 +26,8 @@ app.get("/notes", (req, res) =>
 );
 // GET request for notes
 app.get("/api/notes", (req, res) => {
-  res.status(200).json("${req.method request received");
+  res.status(200).json(db);
+  // res.status(200).json("${req.method request received");
   console.info(`${req.method} request for note save`);
 });
 // fs.readFile('./db/db.json', 'utf8', (err, data) => {
@@ -39,7 +40,7 @@ app.get("/api/notes", (req, res) => {
 
 //POST REQ>BODY
 //todo post notes
-app.post("/notes", (req, res) => {
+app.post("/api/notes", (req, res) => {
   //
   console.info(`${req.method} request received your notes.`);
 
