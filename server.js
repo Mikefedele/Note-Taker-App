@@ -29,23 +29,18 @@ app.get('/notes', (req, res) =>
 );
 // GET request for notes
 app.get('/api/notes', (req, res) => {
+  res.status(200).json('${req.method request received')
   console.info(`${req.method} request for note save`);
-  readFromFile('./db/.json').then((data) => res.json(JSON.parse(data)));
+ 
 });
 
-
-
-// fs.readFile(db, 'utf8', (err, data) => {
+// fs.readFile('./db/db.json', 'utf8', (err, data) => {
 //   if (err) {
 //     console.error(err);
-//   } else {
+//   }     //convert string to JSON obj
 //     const parsedData = JSON.parse(data);
-//     parsedData.push(data);
-//         // noteListItems.push();
-
-//     writeToFile(file, parsedData);
-//   }
-// });
+//     res.json(parsedData);
+//   });
 
 
 
@@ -58,15 +53,16 @@ app.post('/notes', (req, res) => {
   // Destructuring assignment for the items in req.body
   const {title, text} = req.body
 
-  if (text && title) {
+  if (title && text) {
     const newNote ={
       text,
       title,
       id: uuid(),
     };
-  }
+    console.log(newNote);
+  
 
-  fs.readFile(db, 'utf8', (err, data) => {
+  fs.readFile('./db/db.json', 'utf8', (err, data) => {
     if (err) {
       console.error(err);
     } else {
@@ -76,12 +72,12 @@ app.post('/notes', (req, res) => {
 
       //add new note to the saved notes
       parsedData.push(newNote);
-          noteListItems.push();
+      // res.json(parsedData)
+          parsedData.push();
 
-      writeToFile(file, parsedData);
 
-      fs.writeFile(db,        
-        JSON.stringify(parsedData, null, 2),
+      fs.writeFile('./db/db.json',        
+        JSON.stringify(parsedData, null, 4),
         (writeErr) =>
           writeErr 
           ?console.error(writeErr)
@@ -91,61 +87,17 @@ app.post('/notes', (req, res) => {
     }
   });
 
-
-
-
-
-    
-      
+  const response = {
+    status: 'success',
+    body: newNote,
+  };
+  console.log(response);
+  res.status(201).json(response);
+} else {
+  res.status(500).json('Error in posting your note');
+}     
 });
 
-
-    
-
-  // *  Function to write data to the JSON file given a destination and some content
-//  *  @param {string} destination The file you want to write to.
-//  *  @param {object} content The content you want to write to the file.
-//  *  @returns {void} Nothing
-//  */
-
-// const writeToFile = (db, parsedNotes) =>
-// fs.writeFile(db, JSON.stringify(note, null, 4), (err) =>
-//   err ? console.error(err) : console.info(`\nData written to ${db}`)
-// );
-
-/**
- * 
-//  *  Function to read data from a given a file and append some content
-//  *  @param {object} content The content you want to append to the file.
-//  *  @param {string} file The path to the file you want to save to.
-//  *  @returns {void} Nothing
-//  */
-
-
-  // If all the required properties are present
-  // if (title && text) {
-    // readFromFile()
-  // then 
-// }
-
-    //jsonNotes noteListItems
-    // Obtain existing notes, parse to make objects
-    
- 
-        // Write the note list out 
-        
-      
-    
-
-   
-   
-
-    // const response = {
-    //   status: 'success',
-    //   body: note,
-    // };
-
-   
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} 🚀`)
