@@ -12,7 +12,7 @@ By Mike Fedele
 
 ## Description
 
-An application to create a team profile with different cards depending on their position on the team. I tested this code using jest. 
+A full stack note taking application using Express & NodeJS.
 
 
 ## Deployed

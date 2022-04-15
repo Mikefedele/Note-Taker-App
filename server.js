@@ -22,10 +22,10 @@ app.get("/", (req, res) =>
 
 //route to notes
 app.get("/notes", (req, res) =>
-  res.sendFile(path.join(__dirname, "/public/notes.html"))
+  res.sendFile(path.join(__dirname, "./public/notes.html"))
 );
 // GET request for notes
-app.get("/notes", (req, res) => {
+app.get("/api/notes", (req, res) => {
   res.status(200).json("${req.method request received");
   console.info(`${req.method} request for note save`);
 });
