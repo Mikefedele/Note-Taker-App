@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 // const Router = require('express').Router();
-const PORT = process.env.port || 3001;
+const PORT = process.env.PORT || 3001;
 const app = express();
 const db = require("./db/db.json");
 
@@ -27,19 +27,20 @@ app.get("/notes", (req, res) =>
 // GET request for notes
 app.get("/api/notes", (req, res) => {
   res.status(200).json(db);
-  // res.status(200).json("${req.method request received");
   console.info(`${req.method} request for note save`);
 });
-// fs.readFile('./db/db.json', 'utf8', (err, data) => {
-//   if (err) {
-//     console.error(err);
-//   }     //convert string to JSON obj
-//     const parsedData = JSON.parse(data);
-//     res.json(parsedData);
-//   });
 
-//POST REQ>BODY
-//todo post notes
+//have to be able to save file to page w/o refresh
+fs.readFile('./db/db.json', 'utf8', (err, data) => {
+  if (err) {
+    throw err;
+  }     
+    data = JSON.parse(data);
+  
+});
+
+
+//todo post req.body deconstruct 
 app.post("/api/notes", (req, res) => {
   //
   console.info(`${req.method} request received your notes.`);
@@ -88,7 +89,7 @@ app.post("/api/notes", (req, res) => {
     res.status(500).json("Error in posting your note");
   }
 });
-
+//set up & listen to port
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} 🚀`)
 );
