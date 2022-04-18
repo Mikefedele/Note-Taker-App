@@ -26,18 +26,19 @@ app.get("/notes", (req, res) =>
 );
 // GET request for notes
 app.get("/api/notes", (req, res) => {
-  res.status(200).json(db);
-  console.info(`${req.method} request for note save`);
-});
-
-//have to be able to save file to page w/o refresh
+  //have to be able to save file to page w/o refresh
 fs.readFile('./db/db.json', 'utf8', (err, data) => {
   if (err) {
     throw err;
   }     
     data = JSON.parse(data);
+    res.status(200).json(data);
+    console.info(`${req.method} request for note save`);
+});
   
 });
+
+
 
 
 //todo post req.body deconstruct 
